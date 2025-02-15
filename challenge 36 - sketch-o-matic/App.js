@@ -76,20 +76,25 @@ export default function App() {
        any other file!
 */
     
-    const toggleMouseDown = ()=>{
-        setMouseDown(!mouseDown)
-        
-    }
+ 
+    
+    // function handleMouseEnter(event) {
+    //     if (mouseDown) {
+    //         setPixels(prevPixels => prevPixels.map(pixel => {
+    //             return pixel.id === event.target.id ? { id: pixel.id, filled: wantsToDraw } : pixel
+    //         }))       
+    //     }
+    // }
     const handleMouseEnter=(e)=>{
     if(mouseDown){
         setPixels((prevPixel)=>prevPixel.map((pixel)=>{
-            return pixel.id===e.target.id?{...pixel,isFilled:wantsToDraw}:pixel
+            return pixel.id===e.target.id?{...pixel,filled:wantsToDraw}:pixel
         }))
     }
         
         
     }
-    console.log(mouseDown)
+    // console.log(mouseDown)
 	const pixelElements = pixels.map((pixel) => (
 		<div onMouseEnter={handleMouseEnter}
 			key={pixel.id}
@@ -100,7 +105,7 @@ export default function App() {
 
 
     return (
-    	<div className="wrapper" onMouseDown={toggleMouseDown} onMouseUp={toggleMouseDown}>
+    	<div className="wrapper" onMouseDown={()=>{setMouseDown(true)}} onMouseUp={()=>{setMouseDown(false)}}>
     		<div className={`sketch-o-matic-container ${resetRequested && "shake-horizontal"}`}>
     			<h1>Sketch-o-Matic</h1>
     			<div
