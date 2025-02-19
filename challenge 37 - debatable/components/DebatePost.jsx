@@ -35,16 +35,19 @@ The form doesn't work. Your task is to make it a controlled form that adds a com
     })
     const handleChange = (e)=>{
         // console.log(e.target.value)
-        const {name,value}=e.target
-        setFormData((prevData)=> ({...prevData,[name]:value}))
+        const {name,value,checked,type}=e.target
+        setFormData((prevData)=> ({...prevData,[name]:type==="checked"?checked:value}))
     }
     
     const handleSubmit=(e)=>{
-        e.preventDefault()
-        setComments((prevComments)=>{
-            return ([ ...prevComments,{
-                formData
-            }])
+        event.preventDefault()
+        postData.comments.push(formData)
+        setComments([...postData.comments])
+        setFormData({
+          id: nanoid(),
+          userName: "",
+          isAnonymous: false,
+          commentText:""
         })
     }
     return (
@@ -59,17 +62,22 @@ The form doesn't work. Your task is to make it a controlled form that adds a com
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
+                    required
                 />
                 <textarea
                     placeholder="What do you think?"
                     name="commentText"
                     value={formData.commentText}
                     onChange={handleChange}
+                    required
                 />
                 <label>
                     <input 
                         className="checkbox"
                         type="checkbox"
+                        checked={formData.isAnonymous}
+                        onChange={handleChange}
+                        name="isAnonymous"
                         
                     />
                     Post anonymously?
