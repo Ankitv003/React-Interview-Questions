@@ -349,7 +349,7 @@ export default function App() {
 		return () => clearInterval(interval)
 	}, [pookachu.wantsToMove, escaped])
 
-/* Challenge 
+/* Challenge
 
 	The updatePosition function below needs to be finished for Pookachu to move and escape the prison! Your task is to complete the function as follows:
 	
@@ -402,7 +402,29 @@ export default function App() {
 */
 
 	function updatePosition() {
-						
+		const direction = pookachu.direction
+		const addition = (value) => value + 1
+		const subtraction = (value) => value - 1
+		const operation = direction === "right" || direction === "down" ? addition : subtraction
+		let positionToUpdate
+		let limitToCheck
+		
+		if (direction === "right" || direction === "left") {
+			positionToUpdate = "xPosition"
+			limitToCheck = direction === "right" ? boundaries.xAxis.max : boundaries.xAxis.min 
+		} else {
+			positionToUpdate = "yPosition"
+			limitToCheck = direction === "down" ? boundaries.yAxis.max : boundaries.yAxis.min 
+		} 
+		
+		setPookachu(prev => {
+			if (prev[positionToUpdate] === limitToCheck) {
+				return prev 
+			} else {
+				return {...prev, [positionToUpdate]: operation(prev[positionToUpdate])}
+			}
+		})
+		
 	}
 
 	return (
