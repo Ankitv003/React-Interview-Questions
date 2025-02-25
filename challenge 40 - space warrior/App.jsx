@@ -1,19 +1,18 @@
-import React from "react"
-import useSound from "use-sound"
-import PlayArea from "./components/PlayArea"
-import ScoreBoard from "./components/ScoreBoard"
+import React from "react";
+import useSound from "use-sound";
+import PlayArea from "./components/PlayArea";
+import ScoreBoard from "./components/ScoreBoard";
 
 export default function App() {
-    
-    const STARTING_TIME = 60
-    const STARTING_SCORE = 0
-    const [timerRunning, setTimerRunning] = React.useState(false)
-    const [timeLeft, setTimeLeft] = React.useState(STARTING_TIME)
-    const [score, setScore] = React.useState(STARTING_SCORE)
-    const [playSong] = useSound("../audio/song.mp3")
-    const [playClick] = useSound("../audio/click.mp3", {volume: .45})
-    
-/* Challenge 
+  const STARTING_TIME = 60;
+  const STARTING_SCORE = 0;
+  const [timerRunning, setTimerRunning] = React.useState(false);
+  const [timeLeft, setTimeLeft] = React.useState(STARTING_TIME);
+  const [score, setScore] = React.useState(STARTING_SCORE);
+  const [playSong] = useSound("../audio/song.mp3");
+  const [playClick] = useSound("../audio/click.mp3", { volume: 0.45 });
+
+  /* Challenge 
 
     The app's core gameplay components are already in place, but the start button and timer are unfinished. Your task is to finish setting them up to get the game working! 
 
@@ -33,12 +32,24 @@ export default function App() {
         4. To accomplish these tasks, you *only* need to write code below these comments; you 
             *don't* need to change or add anything above them or in a different file! 
 */
-    
-    return (
-        <div>
-            <ScoreBoard data={{score, timeLeft}}/>
-            <PlayArea playProps={{timeLeft, timerRunning, setScore}}/>
-            <button className="play-button fade-in">Play</button>
-        </div>
-        )
+  const handleClick = () => {
+    if (timerRunning) {
+      setTimeLeft(STARTING_TIME);
+      setScore(STARTING_SCORE);
+      setTimerRunning(false);
+      playSong();
+    } else {
+      setTimerRunning(true);
+      playClick();
     }
+  };
+  return (
+    <div>
+      <ScoreBoard data={{ score, timeLeft }} />
+      <PlayArea playProps={{ timeLeft, timerRunning, setScore }} />
+      <button onClick={handleClick} className="play-button fade-in">
+        Play
+      </button>
+    </div>
+  );
+}
