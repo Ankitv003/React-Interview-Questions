@@ -50,7 +50,7 @@ export default function App() {
       <button
         onClick={handleClick}
         disabled={timerRunning}
-        className="play-button fade-in"
+        className={`play-button ${timerRunning ? "fade-out" : "fade-in"}`}
       >
         Play
       </button>
