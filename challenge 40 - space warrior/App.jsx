@@ -1,24 +1,25 @@
-import React from "react";
-import useSound from "use-sound";
-import PlayArea from "./components/PlayArea";
-import ScoreBoard from "./components/ScoreBoard";
+import React from "react"
+import useSound from "use-sound"
+import PlayArea from "./components/PlayArea"
+import ScoreBoard from "./components/ScoreBoard"
 
 export default function App() {
-  const STARTING_TIME = 60;
-  const STARTING_SCORE = 0;
-  const [timerRunning, setTimerRunning] = React.useState(false);
-  const [timeLeft, setTimeLeft] = React.useState(STARTING_TIME);
-  const [score, setScore] = React.useState(STARTING_SCORE);
-  const [playSong] = useSound("../audio/song.mp3");
-  const [playClick] = useSound("../audio/click.mp3", { volume: 0.45 });
-
-  /* Challenge 
+    
+    const STARTING_TIME = 60
+    const STARTING_SCORE = 0
+    const [timerRunning, setTimerRunning] = React.useState(false)
+    const [timeLeft, setTimeLeft] = React.useState(STARTING_TIME)
+    const [score, setScore] = React.useState(STARTING_SCORE)
+    const [playSong] = useSound("../audio/song.mp3")
+    const [playClick] = useSound("../audio/click.mp3", {volume: .45})
+    
+/* Challenge 
 
     The app's core gameplay components are already in place, but the start button and timer are unfinished. Your task is to finish setting them up to get the game working! 
 
         1. When the user clicks on the start button... 
             - the timer starts counting down seconds.
-            - the class of "fade-in" is r eplaced with "fade-out" in the start ("play") button's    
+            - the class of "fade-in" is replaced with "fade-out" in the start ("play") button's    
               classList.
             - the start button is disabled. 
             - the song and click sound get played by invoking playSong() and playClick(). 
@@ -32,28 +33,42 @@ export default function App() {
         4. To accomplish these tasks, you *only* need to write code below these comments; you 
             *don't* need to change or add anything above them or in a different file! 
 */
-  const handleClick = () => {
-    if (timerRunning) {
-      setTimeLeft(STARTING_TIME);
-      setScore(STARTING_SCORE);
-      setTimerRunning(false);
-      playSong();
-    } else {
-      setTimerRunning(true);
-      playClick();
+    
+    if (timeLeft === 0 && timerRunning) {
+        setTimerRunning(false)
     }
-  };
-  return (
-    <div>
-      <ScoreBoard data={{ score, timeLeft }} />
-      <PlayArea playProps={{ timeLeft, timerRunning, setScore }} />
-      <button
-        onClick={handleClick}
-        disabled={timerRunning}
-        className={`play-button ${timerRunning ? "fade-out" : "fade-in"}`}
-      >
-        Play
-      </button>
-    </div>
-  );
-}
+    
+    React.useEffect(()=>{
+        let interval
+        if (timerRunning) {
+            interval = setInterval(()=>{
+                setTimeLeft(currentTime => currentTime - 1)
+            }, 1000) 
+        } 
+        return () => clearInterval(interval)
+    }, [timerRunning])
+    
+    function startGame() {
+        setTimerRunning(true)
+        if (timeLeft === 0) {
+            setTimeLeft(STARTING_TIME)
+            setScore(STARTING_SCORE) 
+        }
+        playSong()
+        playClick()
+    }
+    
+    const buttonClass = timerRunning ? "fade-out" : "fade-in"
+    
+    return (
+        <div>
+            <ScoreBoard data={{score, timeLeft}}/>
+            <PlayArea playProps={{timeLeft, timerRunning, setScore}}/>
+            <button onClick={startGame}
+                    disabled={timerRunning}
+                    className={`play-button ${buttonClass}`}
+            >
+            Play</button>
+        </div>
+        )
+    }
